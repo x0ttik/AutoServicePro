@@ -47,6 +47,13 @@
     <main>
         <a href="{{ route('dashboard') }}">Volver al inicio</a>
         <h1>Catálogo de servicios</h1>
+        @if (session('status'))
+            <p role="status">{{ session('status') }}</p>
+        @endif
+
+        @can('manage-services')
+            <p><a href="{{ route('services.create') }}">Nuevo servicio</a></p>
+        @endcan
 
         <div class="catalogo">
             <table>
