@@ -1,23 +1,19 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Inicio | AutoService Pro</title>
-</head>
-<body>
-    <main>
-        <h1>AutoService Pro</h1>
-        <p>Bienvenido, {{ auth()->user()->name }}.</p>
-        <p>Rol: {{ auth()->user()->role }}</p>
+@extends('layouts.app')
 
-        <a href="{{ route('services.index') }}">Ir al catalogo</a>
+@section('title', 'Resumen | AutoService Pro')
 
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit">Cerrar sesión</button>
-        
-        </form>
-    </main>
-</body>
-</html>
+@section('content')
+    <h1> Bienvenido, {{ auth() -> user() -> name }}</h1>
+
+    <p class="descripcion"> 
+        Administra los clientes y el catalogo de servicios del taller
+    </p>
+
+    <section>
+        <h2>AutoService Pro</h2>
+
+        <p class="tarjeta">
+            Selecciona un modulo en el menu lateral para comenzar
+        </p>
+    </section>
+@endsection

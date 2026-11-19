@@ -1,0 +1,151 @@
+* {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6f3;
+            color: #17291f;
+            font-family: system-ui, sans-serif;
+        }
+
+        .panel {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            padding: 32px 22px;
+            background: #11281c;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .marca {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .marca span {
+            display: block;
+            margin-top: 4px;
+            color: #d4f438;
+            font-size: 14px;
+            letter-spacing: 5px;
+        }
+
+        .menu-titulo {
+            margin: 64px 14px 18px;
+            color: #8ca396;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .menu {
+            display: grid;
+            gap: 10px;
+        }
+
+        .menu a {
+            padding: 17px 18px;
+            border-left: 4px solid transparent;
+            border-radius: 14px;
+            color: #b5c5bb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .menu a:hover {
+            background: #1b3929;
+            color: white;
+        }
+
+        .menu a.activo {
+            border-left-color: #d4f438;
+            background: #244734;
+            color: white;
+        }
+
+        .cuenta {
+            margin-top: auto;
+            padding-top: 28px;
+        }
+
+        .usuario {
+            padding-top: 24px;
+            border-top: 1px solid #34503f;
+            overflow-wrap: anywhere;
+        }
+
+        .usuario strong {
+            display: block;
+        }
+
+        .usuario p {
+            margin: 6px 0 20px;
+            color: #a5b9ac;
+            font-size: 14px;
+        }
+
+        .cerrar-sesion {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #46624f;
+            border-radius: 10px;
+            background: transparent;
+            color: white;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .cerrar-sesion:hover {
+            background: #244734;
+        }
+
+        .contenido {
+            flex: 1;
+            min-width: 0;
+            padding: 56px;
+        }
+
+        .contenido h1 {
+            margin: 0 0 12px;
+            font-size: clamp(28px, 4vw, 40px);
+            letter-spacing: -1px;
+        }
+
+        .descripcion {
+            margin: 0 0 32px;
+            color: #748278;
+        }
+
+        .tarjeta {
+            padding: 28px;
+            border: 1px solid #dfe5df;
+            border-radius: 20px;
+            background: white;
+        }
+
+        @media (max-width: 760px) {
+            .panel {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 24px;
+            }
+
+            .menu-titulo {
+                margin-top: 28px;
+            }
+
+            .contenido {
+                padding: 28px 20px;
+            }
+        }
