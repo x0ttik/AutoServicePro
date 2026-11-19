@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\SessionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ServiceController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,9 +18,15 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+
+    //Aqui van las rutas que requieren autentificacion para acceder
+
     Route::view('/dashboard', 'dashboard')
         ->name('dashboard');
 
     Route::post('/logout', [SessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::get('/servicios', [ServiceController::class, 'index'])
+        ->name('services.index');
 });
