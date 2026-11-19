@@ -11,9 +11,12 @@
         <p>Bienvenido, {{ auth()->user()->name }}.</p>
         <p>Rol: {{ auth()->user()->role }}</p>
 
+        <a href="{{ route('services.index') }}">Ir al catalogo</a>
+
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit">Cerrar sesión</button>
+        
         </form>
     </main>
 </body>

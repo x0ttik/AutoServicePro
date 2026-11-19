@@ -29,4 +29,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/servicios', [ServiceController::class, 'index'])
         ->name('services.index');
+
+    Route::middleware('can:manage-services')->group(function () {
+        Route::get('/servicios/crear', [ServiceController::class, 'create'])
+            ->name('services.create');
+
+        Route::post('/servicios', [ServiceController::class, 'store'])
+            ->name('services.store');
+    });
 });
