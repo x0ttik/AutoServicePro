@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+
+class SessionController extends Controller
+{
+    public function create(): View
+    {
+        return view('auth.login');
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email', 'max:255'],
+            'password' => ['required', 'string'],
+        ], [
+            'email.required' => 'Escribe tu correo electrónico.',
+            'email.email' => 'Escribe un correo electrónico válido.',
+            'email.max' => 'El correo debe tener como máximo 255 caracteres.',
+            'password.required' => 'Escribe tu contraseña.',
+            'password.string' => 'La contraseña debe ser texto.',
+        ]);
+
+        if (! Auth::attempt($credentials)) {
+            return back()
+                ->withErrors(['email' => 'El correo o la contraseña son incorrectos.'])
+                ->withInput($request->only('email'));
+        }
+
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('dashboard'));
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
+    }
+}
