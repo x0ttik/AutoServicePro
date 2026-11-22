@@ -4,7 +4,7 @@
 //ya esta
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreVehicleRequest;
+use App\Http\Requests\SaveVehicleRequest;
 use App\Models\Client;
 use App\Models\Vehicle;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -16,14 +16,43 @@ class VehicleController extends Controller
 {
     public function create(Client $client): View
     {
-        return view('vehicles.create', ['client' => $client]);
+        return view('vehicles.form', [
+            'client' => $client,
+            'vehicle' => null,
+        ]);
     }
 
-    public function store(StoreVehicleRequest $request, Client $client): RedirectResponse
+    public function store(SaveVehicleRequest $request, Client $client): RedirectResponse
     {
         $vehicle = new Vehicle($request->validated());
         $vehicle->client()->associate($client);
 
+        $this->persistVehicle($vehicle);
+
+        return redirect()->route('vehicles.show', $vehicle)
+            ->with('status', 'Vehículo registrado correctamente.');
+    }
+
+    public function edit(Vehicle $vehicle): View
+    {
+        return view('vehicles.form', [
+            'client' => $vehicle->client,
+            'vehicle' => $vehicle,
+        ]);
+    }
+
+    public function update(SaveVehicleRequest $request, Vehicle $vehicle): RedirectResponse
+    {
+        $vehicle->fill($request->validated());
+
+        $this->persistVehicle($vehicle);
+
+        return redirect()->route('vehicles.show', $vehicle)
+            ->with('status', 'Vehículo actualizado correctamente.');
+    }
+
+    private function persistVehicle(Vehicle $vehicle): void
+    {
         try {
             $vehicle->save();
         } catch (UniqueConstraintViolationException $exception) {
@@ -35,9 +64,6 @@ class VehicleController extends Controller
                 'plate' => 'Ya existe un vehículo con esa placa.',
             ]);
         }
-
-        return redirect()->route('vehicles.show', $vehicle)
-            ->with('status', 'Vehículo registrado correctamente.');
     }
 
     public function show(Vehicle $vehicle): View

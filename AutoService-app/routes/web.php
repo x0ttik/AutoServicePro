@@ -51,6 +51,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/vehiculos/{vehicle}', [VehicleController::class, 'show'])
         ->name('vehicles.show');
 
+    // Modulo de edicion de vehiculos    
+    Route::get('/vehiculos/{vehicle}/editar', [VehicleController::class, 'edit'])
+        ->name('vehicles.edit');
+
+    Route::patch('/vehiculos/{vehicle}', [VehicleController::class, 'update'])
+        ->name('vehicles.update');    
+
     // Módulo de servicios - Cristopher
     Route::get('/servicios', [ServiceController::class, 'index'])
         ->name('services.index');

@@ -5,8 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use App\Models\Vehicle;
 
-class StoreVehicleRequest extends FormRequest
+class SaveVehicleRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -26,8 +27,16 @@ class StoreVehicleRequest extends FormRequest
 
     public function rules(): array
     {
+        $placaUnica = Rule::unique('vehicles', 'plate');
+        $vehicle = $this->route('vehicle');
+        //dd($vehicle->toArray());
+
+        if ($vehicle instanceof Vehicle) {
+            $placaUnica->ignore($vehicle);
+        }
+
         return [
-            'plate' => ['bail', 'required', 'string', 'max:20', Rule::unique('vehicles', 'plate')],
+            'plate' => ['bail', 'required', 'string', 'max:20', $placaUnica],
             'make' => ['required', 'string', 'max:80'],
             'model' => ['required', 'string', 'max:80'],
             'model_year' => ['required', 'integer', 'between:1000,9999'],
