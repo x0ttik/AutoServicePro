@@ -1,3 +1,5 @@
+@extends('layouts.app')
+@section('content')
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -62,6 +64,9 @@
                         <th scope="col">Servicio</th>
                         <th scope="col">Precio base (MXN)</th>
                         <th scope="col">Estado</th>
+                        @can('manage-services')
+                            <th scope="col">Acciones</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -70,6 +75,23 @@
                             <td>{{ $servicio->name }}</td>
                             <td>${{ number_format($servicio->base_price_cents / 100, 2) }}</td>
                             <td>{{ $servicio->is_active ? 'Activo' : 'Inactivo' }}</td>
+                            @can('manage-services')
+                                <td>
+                                    <a href="{{ route('services.edit', $servicio) }}">Editar</a>
+
+                                    <form method="POST" action="{{ route('services.update-status', $servicio) }}">
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <input type="hidden" name="is_active"
+                                            value="{{ $servicio->is_active ? '0' : '1' }}">
+
+                                        <button type="submit">
+                                            {{ $servicio->is_active ? 'Desactivar' : 'Activar' }}
+                                        </button>
+                                    </form>
+                                </td>
+                            @endcan
                         </tr>
                     @empty
                         <tr>
@@ -82,3 +104,4 @@
     </main>
 </body>
 </html>
+@endsection

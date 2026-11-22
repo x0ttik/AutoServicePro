@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Nuevo servicio | AutoService Pro</title>
+    <title>{{ $service ? 'Editar servicio' : 'Nuevo servicio' }} | AutoService Pro</title>
     <style>
         * { box-sizing: border-box; }
         body { margin: 0; background: #f2f5f2; color: #10251a; font-family: system-ui, sans-serif; }
@@ -21,15 +21,20 @@
 <body>
     <main>
         <a href="{{ route('services.index') }}">Volver al catálogo</a>
-        <h1>Nuevo servicio</h1>
+        <h1>{{ $service ? 'Editar servicio' : 'Nuevo servicio' }}</h1>
 
-        <form method="POST" action="{{ route('services.store') }}">
+        <form method="POST"
+            action="{{ $service ? route('services.update', $service) : route('services.store') }}">
             @csrf
+
+            @if ($service)
+                @method('PATCH')
+            @endif
 
             <div class="campo">
                 <label for="name">Nombre del servicio</label>
                 <input id="name" name="name" type="text"
-                       value="{{ old('name') }}" maxlength="120" required>
+                    value="{{ old('name', $service?->name) }}" maxlength="120" required>
                 @error('name')
                     <p class="error" role="alert">{{ $message }}</p>
                 @enderror
@@ -38,14 +43,15 @@
             <div class="campo">
                 <label for="price">Precio base en MXN</label>
                 <input id="price" name="price" type="text" inputmode="decimal"
-                       value="{{ old('price') }}" aria-describedby="price-help" required>
+                    value="{{ old('price', $service ? number_format($service->base_price_cents / 100, 2, '.', '') : '') }}"
+                    aria-describedby="price-help" required>
                 <p id="price-help" class="ayuda">Usa punto decimal, por ejemplo 350.50.</p>
                 @error('price')
                     <p class="error" role="alert">{{ $message }}</p>
                 @enderror
             </div>
 
-            <button type="submit">Guardar servicio</button>
+            <button type="submit">{{ $service ? 'Guardar cambios' : 'Guardar servicio' }}</button>
         </form>
     </main>
 </body>

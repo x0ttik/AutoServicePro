@@ -44,7 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/servicios', [ServiceController::class, 'index'])
         ->name('services.index');
 
-    // Administración de servicios
+    // Administración de servicios para el rol 'admin'
     Route::middleware('can:manage-services')->group(function () {
 
         Route::get('/servicios/crear', [ServiceController::class, 'create'])
@@ -52,6 +52,15 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/servicios', [ServiceController::class, 'store'])
             ->name('services.store');
+
+        Route::get('/servicios/{service}/editar', [ServiceController::class, 'edit'])
+            ->name('services.edit');
+
+        Route::patch('/servicios/{service}', [ServiceController::class, 'update'])
+            ->name('services.update');
+
+        Route::patch('/servicios/{service}/estado', [ServiceController::class, 'updateStatus'])
+            ->name('services.update-status');
 
     });
 

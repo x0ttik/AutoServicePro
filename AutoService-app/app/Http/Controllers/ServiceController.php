@@ -28,10 +28,45 @@ class ServiceController extends Controller
 
     public function create(): View
     {
-        return view('services.create');
+        return view('services.form', ['service' => null]);
     }
 
     public function store(Request $request): RedirectResponse
+    {
+        $service = new Service();
+        $this->saveService($request, $service);
+
+        return redirect()->route('services.index')
+            ->with('status', 'Servicio registrado correctamente.');
+    }
+
+    public function edit(Service $service): View
+    {
+        return view('services.form', ['service' => $service]);
+    }
+
+    public function update(Request $request, Service $service): RedirectResponse
+    {
+        $this->saveService($request, $service);
+
+        return redirect()->route('services.index')
+            ->with('status', 'Servicio actualizado correctamente.');
+    }
+
+    public function updateStatus(Request $request, Service $service): RedirectResponse
+    {
+        $datos = $request->validate([
+            'is_active' => ['required', 'boolean'],
+        ]);
+
+        $service->is_active = (bool) $datos['is_active'];
+        $service->save();
+
+        return redirect()->route('services.index')
+            ->with('status', $service->is_active ? 'Servicio activado.' : 'Servicio desactivado.');
+    }
+
+    private function saveService(Request $request, Service $service): void
     {
         $datos = $request->validate([
             'name' => ['required', 'string', 'max:120'],
@@ -52,16 +87,12 @@ class ServiceController extends Controller
             'price.max' => 'El precio supera el importe máximo permitido.',
         ]);
 
-        $partes = explode('.', $datos['price'], 2);
+        $partes = explode('.', (string) $datos['price'], 2);
         $pesos = (int) $partes[0];
         $centavos = (int) str_pad($partes[1] ?? '', 2, '0', STR_PAD_RIGHT);
 
-        $servicio = new Service();
-        $servicio->name = $datos['name'];
-        $servicio->base_price_cents = ($pesos * 100) + $centavos;
-        $servicio->save();
-
-        return redirect()->route('services.index')
-            ->with('status', 'Servicio registrado correctamente.');
+        $service->name = $datos['name'];
+        $service->base_price_cents = ($pesos * 100) + $centavos;
+        $service->save();
     }
 }
