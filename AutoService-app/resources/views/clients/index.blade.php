@@ -18,11 +18,11 @@
         </thead>
 
         <tbody>
-            @forelse ($clientes as $cliente)
+            @forelse ($clients as $client)
                 <tr>
-                    <td>{{ $cliente -> name }}</td>
-                    <td>{{ $cliente -> phone }}</td>
-                    <td><a href="{{ route('vehicles.create', $cliente) }}">Registrar vehículo</a></td>
+                    <td>{{ $client -> name }}</td>
+                    <td>{{ $client -> phone }}</td>
+                    <td><a href="{{ route('vehicles.create', $client) }}">Registrar vehículo</a></td>
                 </tr>
             @empty
                 <tr>

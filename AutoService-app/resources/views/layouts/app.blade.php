@@ -27,9 +27,9 @@
                 </a>
 
                 <a 
-                    href="{{ route('clientes.index') }}"
-                    class="{{ request() -> routeIs('clientes.*') ? 'activo' : '' }}"
-                    @if(request() -> routeIs('clientes.*')) aria-current="page"
+                    href="{{ route('clients.index') }}"
+                    class="{{ request() -> routeIs('clients.*') ? 'activo' : '' }}"
+                    @if(request() -> routeIs('clients.*')) aria-current="page"
 @endif
                 >
                 Clientes
