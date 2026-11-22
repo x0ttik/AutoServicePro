@@ -33,4 +33,21 @@ class WorkOrder extends Model
     {
         return $this->hasMany(WorkOrderItem::class);
     }
+
+    protected function casts(): array
+    {
+        return [
+            'delivered_at' => 'datetime',
+        ];
+    }
+
+    public function nextStatus(): ?string
+    {
+        return match ($this->status) {
+            'open' => 'in_progress',
+            'in_progress' => 'ready',
+            'ready' => 'delivered',
+            default => null,
+        };
+    }
 }
