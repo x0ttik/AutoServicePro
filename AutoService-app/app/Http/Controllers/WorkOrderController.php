@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
 use App\Models\WorkOrder;
+use App\Models\Service;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -49,8 +50,24 @@ class WorkOrderController extends Controller
 
     public function show(WorkOrder $workOrder): View
     {
-        $workOrder->load(['vehicle.client', 'creator']);
+        $workOrder->load(['vehicle.client', 'creator', 'items']);
 
-        return view('work-orders.show', ['order' => $workOrder]);
+        $services = $workOrder->status === 'open'
+            ? Service::query()
+                ->where('is_active', true)
+                ->whereNotIn('id', $workOrder->items->pluck('service_id'))
+                ->orderBy('name')
+                ->get()
+            : collect();
+
+        $totalCents = $workOrder->items->sum(
+            fn ($item) => $item->subtotalCents()
+        );
+
+        return view('work-orders.show', [
+            'order' => $workOrder,
+            'services' => $services,
+            'totalCents' => $totalCents,
+        ]);
     }
 }
