@@ -90,6 +90,9 @@ Route::middleware('auth')->group(function () {
 
         Route::delete('/ordenes/{workOrder}/partidas/{item}', [WorkOrderItemController::class, 'destroy'])
             ->name('work-orders.items.destroy');
+
+        Route::patch('/ordenes/{workOrder}/estado', [WorkOrderController::class, 'updateStatus'])
+            ->name('work-orders.update-status');
     });
         
 

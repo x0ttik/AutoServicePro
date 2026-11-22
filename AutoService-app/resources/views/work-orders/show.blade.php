@@ -34,6 +34,40 @@
             <dd>{{ $order->created_at->timezone('America/Tijuana')->format('d/m/Y H:i') }}</dd>
         </dl>
 
+        @php
+        $nextStatus = $order->nextStatus();
+
+        $actionLabel = match ($nextStatus) {
+            'in_progress' => 'Iniciar trabajo',
+            'ready' => 'Marcar lista para entrega',
+            'delivered' => 'Confirmar entrega',
+            default => null,
+        };
+    @endphp
+
+    @foreach ($errors->getBag('orderTransition')->all() as $error)
+        <p role="alert">{{ $error }}</p>
+    @endforeach
+
+    @if ($actionLabel !== null)
+        <form method="POST" action="{{ route('work-orders.update-status', $order) }}">
+            @csrf
+            @method('PATCH')
+
+            <input type="hidden" name="expected_status" value="{{ $order->status }}">
+            <input type="hidden" name="target_status" value="{{ $nextStatus }}">
+
+            <button type="submit">{{ $actionLabel }}</button>
+        </form>
+    @endif
+
+    @if ($order->delivered_at)
+        <p>
+            <strong>Fecha de entrega</strong>
+            {{ $order->delivered_at->timezone('America/Tijuana')->format('d/m/Y H:i') }}
+        </p>
+    @endif
+
         <section>
         <h2>Cotización</h2>
 
