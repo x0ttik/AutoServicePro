@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\WorkOrderController;
 use Illuminate\Support\Facades\Route;
 
 // Página principal
@@ -61,6 +62,24 @@ Route::middleware('auth')->group(function () {
     // Módulo de servicios - Cristopher
     Route::get('/servicios', [ServiceController::class, 'index'])
         ->name('services.index');
+
+    // Modulo de ordenes
+    Route::get('/ordenes', [WorkOrderController::class, 'index'])
+        ->name('work-orders.index');
+
+    Route::get('/ordenes/{workOrder}', [WorkOrderController::class, 'show'])
+        ->name('work-orders.show');
+
+    Route::get('/vehiculos/{vehicle}/ordenes/crear', [WorkOrderController::class, 'create'])
+        ->name('work-orders.create')
+        ->missing(fn () => redirect()->route('work-orders.index')
+            ->with('error', 'El vehículo no existe. Selecciona uno registrado.'));
+
+    Route::post('/vehiculos/{vehicle}/ordenes', [WorkOrderController::class, 'store'])
+        ->name('work-orders.store')
+        ->missing(fn () => redirect()->route('work-orders.index')
+            ->with('error', 'El vehículo no existe. Selecciona uno registrado.'));    
+        
 
     // Administración de servicios para el rol 'admin'
     Route::middleware('can:manage-services')->group(function () {

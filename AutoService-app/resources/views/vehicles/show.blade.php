@@ -9,6 +9,7 @@
     <main>
         <h1>{{ $vehicle->make }} {{ $vehicle->model }}</h1>
         <a href="{{ route('vehicles.edit', $vehicle) }}">Editar vehículo</a>
+        <a href="{{ route('work-orders.create', $vehicle) }}">Abrir orden de trabajo</a>
 
         @if (session('status'))
             <p role="status">{{ session('status') }}</p>

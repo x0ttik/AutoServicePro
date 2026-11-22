@@ -13,7 +13,8 @@
         <h2>AutoService Pro</h2>
 
         <p class="tarjeta">
-            Selecciona un modulo en el menu lateral para comenzar
+            Selecciona un modulo en el menu lateral para comenzar o 
+            <a href="{{ route('work-orders.index') }}">Órdenes de trabajo</a>
         </p>
     </section>
 @endsection
