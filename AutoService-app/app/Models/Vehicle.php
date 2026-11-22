@@ -1,5 +1,6 @@
 <?php
 
+//ya esta
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +20,6 @@ class Vehicle extends Model
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(Cliente::class);
+        return $this->belongsTo(Client::class);
     }
 }

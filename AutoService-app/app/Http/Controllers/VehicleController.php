@@ -1,9 +1,11 @@
 <?php
 
+
+//ya esta
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreVehicleRequest;
-use App\Models\Cliente;
+use App\Models\Client;
 use App\Models\Vehicle;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\RedirectResponse;
@@ -12,12 +14,12 @@ use Illuminate\View\View;
 
 class VehicleController extends Controller
 {
-    public function create(Cliente $client): View
+    public function create(Client $client): View
     {
         return view('vehicles.create', ['client' => $client]);
     }
 
-    public function store(StoreVehicleRequest $request, Cliente $client): RedirectResponse
+    public function store(StoreVehicleRequest $request, Client $client): RedirectResponse
     {
         $vehicle = new Vehicle($request->validated());
         $vehicle->client()->associate($client);

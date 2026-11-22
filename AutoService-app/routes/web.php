@@ -2,7 +2,7 @@
 <?php
 
 use App\Http\Controllers\Auth\SessionController;
-use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
@@ -38,8 +38,8 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
 
     // Módulo de clientes - Paul
-    Route::get('/clientes', [ClienteController::class, 'index'])
-        ->name('clientes.index');
+    Route::get('/clientes', [ClientController::class, 'index'])
+        ->name('clients.index');
 
     // Modulos de vehiculos
     Route::get('/clientes/{client}/vehiculos/crear', [VehicleController::class, 'create'])
