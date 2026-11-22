@@ -4,6 +4,7 @@
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 // Página principal
@@ -39,6 +40,16 @@ Route::middleware('auth')->group(function () {
     // Módulo de clientes - Paul
     Route::get('/clientes', [ClienteController::class, 'index'])
         ->name('clientes.index');
+
+    // Modulos de vehiculos
+    Route::get('/clientes/{client}/vehiculos/crear', [VehicleController::class, 'create'])
+        ->name('vehicles.create');
+
+    Route::post('/clientes/{client}/vehiculos', [VehicleController::class, 'store'])
+        ->name('vehicles.store');
+
+    Route::get('/vehiculos/{vehicle}', [VehicleController::class, 'show'])
+        ->name('vehicles.show');
 
     // Módulo de servicios - Cristopher
     Route::get('/servicios', [ServiceController::class, 'index'])
