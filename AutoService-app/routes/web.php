@@ -6,6 +6,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\WorkOrderController;
+use App\Http\Controllers\WorkOrderItemController;
 use Illuminate\Support\Facades\Route;
 
 // Página principal
@@ -78,7 +79,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/vehiculos/{vehicle}/ordenes', [WorkOrderController::class, 'store'])
         ->name('work-orders.store')
         ->missing(fn () => redirect()->route('work-orders.index')
-            ->with('error', 'El vehículo no existe. Selecciona uno registrado.'));    
+            ->with('error', 'El vehículo no existe. Selecciona uno registrado.')); 
+            
+    Route::scopeBindings()->group(function () {
+        Route::post('/ordenes/{workOrder}/partidas', [WorkOrderItemController::class, 'store'])
+            ->name('work-orders.items.store');
+
+        Route::patch('/ordenes/{workOrder}/partidas/{item}', [WorkOrderItemController::class, 'update'])
+            ->name('work-orders.items.update');
+
+        Route::delete('/ordenes/{workOrder}/partidas/{item}', [WorkOrderItemController::class, 'destroy'])
+            ->name('work-orders.items.destroy');
+    });
         
 
     // Administración de servicios para el rol 'admin'
