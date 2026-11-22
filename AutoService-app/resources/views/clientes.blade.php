@@ -13,6 +13,7 @@
             <tr>
                 <th>Nombre</th>
                 <th>Telefono</th>
+                <th>Accion</th>
             </tr>
         </thead>
 
@@ -21,6 +22,7 @@
                 <tr>
                     <td>{{ $cliente -> name }}</td>
                     <td>{{ $cliente -> phone }}</td>
+                    <td><a href="{{ route('vehicles.create', $cliente) }}">Registrar vehículo</a></td>
                 </tr>
             @empty
                 <tr>
