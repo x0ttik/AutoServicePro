@@ -13,7 +13,7 @@
         <form
             class="formulario-cliente"
             method="POST"
-            action="{{ route('clientes.update', ['cliente' => $cliente->id]) }}"
+            action="{{ route('clients.update', ['cliente' => $cliente->id]) }}"
         >
             @csrf
             @method('PUT')
@@ -64,7 +64,7 @@
                 </button>
 
                 <a
-                    href="{{ route('clientes.show', ['cliente' => $cliente->id]) }}"
+                    href="{{ route('clients.show', ['cliente' => $cliente->id]) }}"
                     class="enlace-cliente"
                 >
                     Cancelar

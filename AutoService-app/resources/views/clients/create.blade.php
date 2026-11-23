@@ -13,7 +13,7 @@
         <form
             class="formulario-cliente"
             method="POST"
-            action="{{ route('clientes.store') }}"
+            action="{{ route('clients.store') }}"
         >
             @csrf
 
@@ -63,7 +63,7 @@
                 </button>
 
                 <a
-                    href="{{ route('clientes.index') }}"
+                    href="{{ route('clients.index') }}"
                     class="enlace-cliente"
                 >
                     Cancelar

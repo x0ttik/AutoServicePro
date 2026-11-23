@@ -13,7 +13,7 @@
     <h2> Secciones del sistema </h2>
     <ul>
         <li>
-            <a href="{{ route('clientes.index') }}">Clientes</a>
+            <a href="{{ route('clients.index') }}">Clientes</a>
         </li>
         <li>Vehículos</li>
         <li>Ordenes de servicio</li>

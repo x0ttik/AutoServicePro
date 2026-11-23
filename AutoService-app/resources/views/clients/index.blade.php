@@ -17,7 +17,7 @@
 
     <div class="acciones-cliente">
         <a
-            href="{{ route('clientes.create') }}"
+            href="{{ route('clients.create') }}"
             class="boton-cliente"
         >
             Registrar cliente
@@ -44,11 +44,18 @@
                         <td>{{ $cliente->phone }}</td>
                         <td>
                             <a
-                                href="{{ route('clientes.show', ['cliente' => $cliente->id]) }}"
+                                href="{{ route('clients.show', ['cliente' => $cliente->id]) }}"
                                 class="boton-cliente"
                                 aria-label="Ver ficha de {{ $cliente->name }}"
                             >
                                 Ver ficha
+                            </a>
+                            <a
+                                href="{{ route('vehicles.create', ['client' => $cliente->id]) }}"
+                                class="boton-cliente"
+                                aria-label="Registrar vehículo de {{ $cliente->name }}"
+                            >
+                                Registrar vehículo
                             </a>
                         </td>
                     </tr>

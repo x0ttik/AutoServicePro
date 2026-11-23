@@ -28,14 +28,14 @@
 
     <div class="acciones-cliente">
         <a
-            href="{{ route('clientes.edit', ['cliente' => $cliente->id]) }}"
+            href="{{ route('clients.edit', ['cliente' => $cliente->id]) }}"
             class="boton-cliente"
         >
             Editar cliente
         </a>
 
         <a
-            href="{{ route('clientes.index') }}"
+            href="{{ route('clients.index') }}"
             class="enlace-cliente"
         >
             Volver al listado
