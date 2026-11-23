@@ -110,3 +110,44 @@ test('empty listings and missing client identifiers are handled', function () {
     $this->get(route('clients.show', ['cliente' => 999]))->assertNotFound();
     $this->get(route('clients.edit', ['cliente' => 999]))->assertNotFound();
 });
+
+test('client detail shows only its associated vehicles', function () {
+    $this->actingAs(User::factory()->make(['id' => 1, 'role' => 'user']));
+    $client = Client::create(['name' => 'Propietario', 'phone' => '6641234567']);
+    $other = Client::create(['name' => 'Otro propietario', 'phone' => '6647654321']);
+    $vehicle = $client->vehicles()->create([
+        'plate' => 'CLIENTE1', 'make' => 'Toyota', 'model' => 'Corolla', 'model_year' => 2020,
+    ]);
+    $client->vehicles()->create([
+        'plate' => 'CLIENTE2', 'make' => 'Honda', 'model' => 'Civic', 'model_year' => 2021,
+    ]);
+    $other->vehicles()->create([
+        'plate' => 'OTRO999', 'make' => 'Nissan', 'model' => 'Versa', 'model_year' => 2022,
+    ]);
+
+    $this->get(route('clients.show', ['cliente' => $client->id]))->assertOk()
+        ->assertSee('Vehículos asociados')->assertSee('CLIENTE1')->assertSee('CLIENTE2')
+        ->assertSee('Toyota')->assertSee('Corolla')->assertSee('2020')
+        ->assertDontSee('OTRO999')->assertDontSee('Versa')
+        ->assertSee(route('vehicles.show', ['vehicle' => $vehicle->id]), false)
+        ->assertSee(route('vehicles.create', ['client' => $client->id]), false);
+});
+
+test('client with no vehicles can register one and see it on its detail', function () {
+    $this->actingAs(User::factory()->make(['id' => 1, 'role' => 'user']));
+    $client = Client::create(['name' => 'Propietario', 'phone' => '6641234567']);
+    $this->get(route('clients.show', ['cliente' => $client->id]))->assertOk()
+        ->assertSee('Este cliente no tiene vehículos registrados.')
+        ->assertSee(route('vehicles.create', ['client' => $client->id]), false);
+
+    $this->get(route('vehicles.create', ['client' => $client->id]))
+        ->assertOk()->assertSee('Propietario');
+    $this->post(route('vehicles.store', ['client' => $client->id]), [
+        'plate' => 'NUEVO123', 'make' => 'Ford', 'model' => 'Focus', 'model_year' => 2019,
+    ])->assertSessionHasNoErrors()
+        ->assertRedirect(route('vehicles.show', ['vehicle' => $client->vehicles()->sole()->id]));
+
+    $this->get(route('clients.show', ['cliente' => $client->id]))->assertOk()
+        ->assertSee('NUEVO123')->assertSee('Ford')->assertSee('Focus')
+        ->assertDontSee('Este cliente no tiene vehículos registrados.');
+});

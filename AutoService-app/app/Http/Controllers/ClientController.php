@@ -45,6 +45,8 @@ class ClientController extends Controller
 
     public function show(Client $cliente)
     {
+        $cliente->load(['vehicles' => fn ($query) => $query->orderBy('id')]);
+
         return view('clients.show', [
             'cliente' => $cliente,
         ]);
