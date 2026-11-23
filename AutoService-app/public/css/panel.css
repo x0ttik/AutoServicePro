@@ -386,6 +386,72 @@ body {
     font-weight: 700;
 }
 
+/* Listado de órdenes */
+
+.tabla-ordenes td {
+    vertical-align: middle;
+}
+
+.placa-orden {
+    display: block;
+    margin-top: 6px;
+    color: #748278;
+    font-size: 14px;
+}
+
+.fecha-orden {
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.tabla-ordenes .estado-orden {
+    white-space: nowrap;
+}
+
+.estado-orden.estado-open {
+    background: #edf3ed;
+    color: #34503f;
+}
+
+.estado-orden.estado-in_progress {
+    background: #fff3d6;
+    color: #755200;
+}
+
+.estado-orden.estado-ready {
+    background: #e5f0ff;
+    color: #24548a;
+}
+
+.estado-orden.estado-delivered {
+    background: #e5f4e8;
+    color: #246137;
+}
+
+/* Paginación */
+
+.paginacion-ordenes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid #dfe5df;
+    font-size: 14px;
+}
+
+.paginacion-ordenes .boton-cliente {
+    padding: 10px 16px;
+}
+
+.pagina-deshabilitada {
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: #f4f6f3;
+    color: #748278;
+}
 /* Pantallas pequeñas */
 
 @media (max-width: 760px) {
