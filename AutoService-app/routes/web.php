@@ -40,6 +40,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/clientes', [ClienteController::class, 'index'])
         ->name('clientes.index');
 
+    // Crear cliente nuevo
+    Route::get('/clientes/crear', [ClienteController:: class, 'create'])
+        -> name('clientes.create');
+
+    // Guardar cliente nuevo
+    Route::post('/clientes', [ClienteController:: class, 'store'])
+        -> name('clientes.store');
+
+    // Consultar cliente
+    Route::get('/clientes/{cliente}', [ClienteController::class, 'show'])
+        -> whereNumber('cliente')
+        -> name('clientes.show');
+
+    // Formulario de edicion
+    Route::get('/clientes/{cliente}/editar', [ClienteController::class, 'edit'])
+        -> whereNumber('cliente')
+        -> name('clientes.edit');
+
+    // Guardar cambios
+    Route::put('/clientes/{cliente}', [ClienteController:: class, 'update'])
+        -> whereNumber('cliente')
+        -> name('clientes.update');
+
     // Módulo de servicios - Cristopher
     Route::get('/servicios', [ServiceController::class, 'index'])
         ->name('services.index');

@@ -131,6 +131,150 @@
             background: white;
         }
 
+        .tabla-contenedor {
+            overflow-x: auto;
+        }
+
+        .tabla-clientes {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .tabla-clientes th {
+            padding: 16px;
+            background: #edf3ed;
+            color: #34503f;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .tabla-clientes td {
+            padding: 18px 16px;
+            border-bottom: 1px solid #e5ebe5;
+            overflow-wrap: anywhere;
+        }
+
+        .tabla-clientes tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .tabla-clientes tbody tr:hover {
+            background: #f7faf5;
+        }
+
+        .tabla-clientes .tabla-vacia {
+            padding: 32px 16px;
+            text-align: center;
+            color: #748278;
+        }
+
+        .acciones-cliente {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .boton-cliente {
+            display: inline-block;
+            padding: 12px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #244734;
+            color: white;
+            font: inherit;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .boton-cliente:hover {
+            background: #11281c;
+        }
+
+        .boton-cliente:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .formulario-cliente {
+            max-width: 560px;
+        }
+
+        .campo-cliente {
+            margin-bottom: 24px;
+        }
+
+        .campo-cliente label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .campo-cliente input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #a6b6a9;
+            border-radius: 10px;
+            background: white;
+            color: #17291f;
+            font: inherit;
+        }
+
+        .campo-cliente input:focus-visible {
+            outline: 2px solid #244734;
+            outline-offset: 2px;
+        }
+
+        .enlace-cliente {
+            color: #244734;
+            font-weight: 600;
+        }
+
+        .error-cliente {
+            margin: 8px 0 0;
+            color: #a32727;
+            font-size: 14px;
+        }
+
+        .exito-cliente {
+            padding: 16px;
+            border: 1px solid #b7d5bc;
+            border-radius: 10px;
+            background: #eaf5ec;
+            color: #244734;
+        }
+
+        .ficha-cliente {
+            margin: 24px 0 32px;
+        }
+
+        .ficha-cliente dt {
+            margin-top: 20px;
+            color: #748278;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .ficha-cliente dd {
+            margin: 6px 0 0;
+            font-size: 18px;
+            overflow-wrap: anywhere;
+        }
+
+        .tabla-clientes th:last-child,
+        .tabla-clientes td:last-child {
+            text-align: right;
+        }
+
+        .tabla-clientes .boton-cliente {
+            padding: 8px 14px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
         @media (max-width: 760px) {
             .panel {
                 flex-direction: column;
