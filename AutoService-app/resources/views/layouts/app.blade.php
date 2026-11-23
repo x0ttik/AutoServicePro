@@ -25,18 +25,10 @@
                     Resumen
                 </a>
 
-<<<<<<< HEAD
                 <a
                     href="{{ route('work-orders.index') }}"
                     class="{{ request()->routeIs('work-orders.*') ? 'activo' : '' }}"
                     @if (request()->routeIs('work-orders.index')) aria-current="page" @endif
-=======
-                <a 
-                    href="{{ route('clients.index') }}"
-                    class="{{ request()->routeIs('clients.*', 'vehicles.*') ? 'activo' : '' }}"
-                    @if(request()->routeIs('clients.*', 'vehicles.*')) aria-current="page"
-@endif
->>>>>>> main
                 >
                     Órdenes de trabajo
                 </a>
