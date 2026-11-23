@@ -4,6 +4,7 @@ use App\Models\Client;
 use App\Models\User;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
@@ -109,4 +110,83 @@ test('empty listings and missing client identifiers are handled', function () {
     $this->get(route('clients.index'))->assertOk()->assertSee('No hay clientes registrados.');
     $this->get(route('clients.show', ['cliente' => 999]))->assertNotFound();
     $this->get(route('clients.edit', ['cliente' => 999]))->assertNotFound();
+});
+
+test('client detail shows only its associated vehicles', function () {
+    $this->actingAs(User::factory()->make(['id' => 1, 'role' => 'user']));
+    $client = Client::create(['name' => 'Propietario', 'phone' => '6641234567']);
+    $other = Client::create(['name' => 'Otro propietario', 'phone' => '6647654321']);
+    $vehicle = $client->vehicles()->create([
+        'plate' => 'CLIENTE1', 'make' => 'Toyota', 'model' => 'Corolla', 'model_year' => 2020,
+    ]);
+    $client->vehicles()->create([
+        'plate' => 'CLIENTE2', 'make' => 'Honda', 'model' => 'Civic', 'model_year' => 2021,
+    ]);
+    $other->vehicles()->create([
+        'plate' => 'OTRO999', 'make' => 'Nissan', 'model' => 'Versa', 'model_year' => 2022,
+    ]);
+
+    $this->get(route('clients.show', ['cliente' => $client->id]))->assertOk()
+        ->assertSee('Vehículos asociados')->assertSee('CLIENTE1')->assertSee('CLIENTE2')
+        ->assertSee('Toyota')->assertSee('Corolla')->assertSee('2020')
+        ->assertDontSee('OTRO999')->assertDontSee('Versa')
+        ->assertSee(route('vehicles.show', ['vehicle' => $vehicle->id]), false)
+        ->assertSee(route('vehicles.create', ['client' => $client->id]), false);
+});
+
+test('client with no vehicles can register one and see it on its detail', function () {
+    $this->actingAs(User::factory()->make(['id' => 1, 'role' => 'user']));
+    $client = Client::create(['name' => 'Propietario', 'phone' => '6641234567']);
+    $this->get(route('clients.show', ['cliente' => $client->id]))->assertOk()
+        ->assertSee('Este cliente no tiene vehículos registrados.')
+        ->assertSee(route('vehicles.create', ['client' => $client->id]), false);
+
+    $this->get(route('vehicles.create', ['client' => $client->id]))
+        ->assertOk()->assertSee('Propietario');
+    $this->post(route('vehicles.store', ['client' => $client->id]), [
+        'plate' => 'NUEVO123', 'make' => 'Ford', 'model' => 'Focus', 'model_year' => 2019,
+    ])->assertSessionHasNoErrors()
+        ->assertRedirect(route('vehicles.show', ['vehicle' => $client->vehicles()->sole()->id]));
+
+    $this->get(route('clients.show', ['cliente' => $client->id]))->assertOk()
+        ->assertSee('NUEVO123')->assertSee('Ford')->assertSee('Focus')
+        ->assertDontSee('Este cliente no tiene vehículos registrados.');
+});
+
+test('vehicle create and edit forms retain dashboard and model lookup after merge', function () {
+    $this->actingAs(User::factory()->make(['id' => 1, 'role' => 'user']));
+    $client = Client::create(['name' => 'Propietario', 'phone' => '6641234567']);
+    $vehicle = $client->vehicles()->create([
+        'plate' => 'FORM123', 'make' => 'Toyota', 'model' => 'Corolla', 'model_year' => 2020,
+    ]);
+
+    foreach ([route('vehicles.create', $client), route('vehicles.edit', $vehicle)] as $url) {
+        $this->get($url)->assertOk()->assertSee('class="sidebar"', false)
+            ->assertSee('id="model_year"', false)->assertSee('Buscar modelos')
+            ->assertSee('id="model-suggestions"', false)
+            ->assertSee(route('vehicles.models.index'), false)
+            ->assertSee(route('clients.show', ['cliente' => $client->id]), false);
+    }
+});
+
+test('model lookup returns suggestions through the merged authenticated route', function () {
+    $this->actingAs(User::factory()->make(['id' => 1, 'role' => 'user']));
+    Http::preventStrayRequests();
+    Http::fake(['vpic.nhtsa.dot.gov/*' => Http::response(['Results' => [
+        ['Model_Name' => 'Corolla'], ['Model_Name' => 'Camry'], ['Model_Name' => 'Corolla'],
+    ]])]);
+
+    $this->getJson(route('vehicles.models.index', ['make' => 'Toyota', 'model_year' => 2020]))
+        ->assertOk()->assertJsonPath('models', ['Camry', 'Corolla']);
+    Http::assertSent(fn ($request) => str_contains($request->url(), '/make/Toyota/modelyear/2020'));
+});
+
+test('model lookup failure preserves the manual entry fallback', function () {
+    $this->actingAs(User::factory()->make(['id' => 1, 'role' => 'user']));
+    Http::preventStrayRequests();
+    Http::fake(['vpic.nhtsa.dot.gov/*' => Http::response([], 503)]);
+
+    $this->getJson(route('vehicles.models.index', ['make' => 'Toyota', 'model_year' => 2020]))
+        ->assertStatus(503)->assertJsonPath('models', [])
+        ->assertJsonPath('message', 'La consulta de modelos no está disponible. Puedes escribir el modelo manualmente.');
 });
