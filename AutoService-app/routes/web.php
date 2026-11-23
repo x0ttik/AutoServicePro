@@ -7,6 +7,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\WorkOrderItemController;
+use App\Http\Controllers\VehicleModelLookupController;
 use Illuminate\Support\Facades\Route;
 
 // Página principal
@@ -49,6 +50,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/clientes/{client}/vehiculos', [VehicleController::class, 'store'])
         ->name('vehicles.store');
+
+    Route::get('/vehiculos/modelos', VehicleModelLookupController::class)
+        ->name('vehicles.models.index');
 
     Route::get('/vehiculos/{vehicle}', [VehicleController::class, 'show'])
         ->name('vehicles.show');
