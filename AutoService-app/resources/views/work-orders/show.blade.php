@@ -21,7 +21,7 @@
             href="{{ route('vehicles.show', $order->vehicle) }}"
             class="enlace-cliente"
         >
-            Volver al vehículo
+            Ir al vehiculo
         </a>
     </div>
 
