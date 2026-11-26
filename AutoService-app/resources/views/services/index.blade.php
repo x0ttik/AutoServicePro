@@ -1,64 +1,28 @@
 @extends('layouts.app')
+
+@section('title', 'Catálogo de servicios | AutoService Pro')
+
 @section('content')
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Catálogo de servicios | AutoService Pro</title>
+    <h1>Catálogo de servicios</h1>
+    <p class="descripcion">Consulta los servicios y precios base del taller.</p>
 
-    <style>
-        body {
-            margin: 0;
-            background: #f2f5f2;
-            color: #10251a;
-            font-family: system-ui, sans-serif;
-        }
+    @if (session('status'))
+        <p class="exito-cliente" role="status">{{ session('status') }}</p>
+    @endif
 
-        main {
-            max-width: 880px;
-            margin: 0 auto;
-            padding: clamp(20px, 5vw, 48px);
-        }
+    @can('manage-services')
+        <div class="acciones-cliente">
+            <a href="{{ route('services.create') }}" class="boton-cliente">
+                Nuevo servicio
+            </a>
+        </div>
+    @endcan
 
-        a { color: #163e28; }
+    <section class="tarjeta" aria-labelledby="titulo-servicios">
+        <h2 id="titulo-servicios">Listado de servicios</h2>
 
-        .catalogo {
-            overflow-x: auto;
-            background: #fff;
-            border: 1px solid #d7e0d8;
-            border-radius: 14px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 14px 18px;
-            border-bottom: 1px solid #e7ede8;
-            text-align: left;
-        }
-
-        th { background: #eaf0ea; }
-        tbody tr:last-child td { border-bottom: 0; }
-    </style>
-</head>
-<body>
-    <main>
-        <a href="{{ route('dashboard') }}">Volver al inicio</a>
-        <h1>Catálogo de servicios</h1>
-        @if (session('status'))
-            <p role="status">{{ session('status') }}</p>
-        @endif
-
-        @can('manage-services')
-            <p><a href="{{ route('services.create') }}">Nuevo servicio</a></p>
-        @endcan
-
-        <div class="catalogo">
-            <table>
+        <div class="tabla-contenedor">
+            <table class="tabla-clientes tabla-servicios">
                 <thead>
                     <tr>
                         <th scope="col">Servicio</th>
@@ -73,35 +37,49 @@
                     @forelse ($servicios as $servicio)
                         <tr>
                             <td>{{ $servicio->name }}</td>
-                            <td>${{ number_format($servicio->base_price_cents / 100, 2) }}</td>
-                            <td>{{ $servicio->is_active ? 'Activo' : 'Inactivo' }}</td>
+                            <td class="precio-servicio">
+                                ${{ number_format($servicio->base_price_cents / 100, 2) }}
+                            </td>
+                            <td>
+                                <span class="estado-servicio {{ $servicio->is_active ? 'servicio-activo' : 'servicio-inactivo' }}">
+                                    {{ $servicio->is_active ? 'Activo' : 'Inactivo' }}
+                                </span>
+                            </td>
                             @can('manage-services')
                                 <td>
-                                    <a href="{{ route('services.edit', $servicio) }}">Editar</a>
-
-                                    <form method="POST" action="{{ route('services.update-status', $servicio) }}">
-                                        @csrf
-                                        @method('PATCH')
-
-                                        <input type="hidden" name="is_active"
-                                            value="{{ $servicio->is_active ? '0' : '1' }}">
-
-                                        <button type="submit">
-                                            {{ $servicio->is_active ? 'Desactivar' : 'Activar' }}
-                                        </button>
-                                    </form>
+                                    <div class="acciones-servicio">
+                                        <a
+                                            href="{{ route('services.edit', $servicio) }}"
+                                            class="boton-cliente"
+                                            aria-label="Editar servicio {{ $servicio->name }}"
+                                        >
+                                            Editar
+                                        </a>
+                                        <form method="POST" action="{{ route('services.update-status', $servicio) }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="is_active" value="{{ $servicio->is_active ? '0' : '1' }}">
+                                            <button
+                                                type="submit"
+                                                class="boton-cliente boton-estado-servicio"
+                                                aria-label="{{ $servicio->is_active ? 'Desactivar' : 'Activar' }} servicio {{ $servicio->name }}"
+                                            >
+                                                {{ $servicio->is_active ? 'Desactivar' : 'Activar' }}
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             @endcan
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3">Todavía no hay servicios disponibles para esta cuenta.</td>
+                            <td colspan="{{ auth()->user()->can('manage-services') ? 4 : 3 }}" class="tabla-vacia">
+                                Todavía no hay servicios disponibles para esta cuenta.
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-    </main>
-</body>
-</html>
+    </section>
 @endsection

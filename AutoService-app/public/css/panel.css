@@ -452,6 +452,63 @@ body {
     background: #f4f6f3;
     color: #748278;
 }
+/* Catálogo de servicios */
+
+.tabla-servicios td {
+    vertical-align: middle;
+}
+
+.precio-servicio {
+    white-space: nowrap;
+}
+
+.estado-servicio {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.servicio-activo {
+    background: #e5f4e8;
+    color: #246137;
+}
+
+.servicio-inactivo {
+    background: #f0f1f0;
+    color: #596a5f;
+}
+
+.acciones-servicio {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.acciones-servicio form {
+    margin: 0;
+}
+
+.boton-cliente.boton-estado-servicio {
+    border: 1px solid #a6b6a9;
+    background: white;
+    color: #244734;
+}
+
+.boton-cliente.boton-estado-servicio:hover {
+    background: #edf3ed;
+}
+
+.ayuda-servicio {
+    margin: 8px 0 0;
+    color: #748278;
+    font-size: 14px;
+}
+
 /* Pantallas pequeñas */
 
 @media (max-width: 760px) {
