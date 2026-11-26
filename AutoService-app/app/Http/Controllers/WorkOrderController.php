@@ -62,9 +62,7 @@ class WorkOrderController extends Controller
                 ->get()
             : collect();
 
-        $totalCents = $workOrder->items->sum(
-            fn ($item) => $item->subtotalCents()
-        );
+        $totalCents = $workOrder->quoteTotalCents();
 
         return view('work-orders.show', [
             'order' => $workOrder,

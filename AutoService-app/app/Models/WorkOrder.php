@@ -50,4 +50,11 @@ class WorkOrder extends Model
             default => null,
         };
     }
+
+    public function quoteTotalCents(): int
+    {
+        return $this->items->sum(
+            fn (WorkOrderItem $item): int => $item->subtotalCents()
+        );
+    }
 }
